@@ -15,7 +15,11 @@ class User(Base):
     last_name: Mapped[str]
     email: Mapped[str] = mapped_column(String(255), unique=True)
     password_hash: Mapped[str] = mapped_column(String)
-    role: Mapped[Role] = mapped_column(Enum(Role, name="user_role_enum"))
+    role: Mapped[Role] = mapped_column(
+        Enum(Role, name="user_role_enum"),
+        default=Role.USER,
+        server_default=Role.USER.value
+    )
 
     accounts = relationship(
         "Account",

@@ -16,4 +16,5 @@ RUN poetry install --no-root --no-cache
 
 EXPOSE ${APP_PORT}
 
-CMD poetry run uvicorn main:app --host 0.0.0.0 --port ${APP_PORT}
+CMD poetry run alembic upgrade head && \
+    poetry run uvicorn main:app --host 0.0.0.0 --port ${APP_PORT}
