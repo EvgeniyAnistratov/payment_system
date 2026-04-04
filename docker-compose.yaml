@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:18.1-alpine
+    restart: on-failure
+    container_name: payment_system_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./.data/postgres_data:/var/lib/postgresql
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_PORT: ${APP_PORT}
+    image: payment_sistem_app
+    container_name: payment_system_app
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres
