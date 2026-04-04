@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from payment_system.settings import APP_TITLE
+from payment_system.core.settings import APP_TITLE
 
 
 app = FastAPI(title=APP_TITLE)
