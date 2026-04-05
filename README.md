@@ -6,6 +6,7 @@ FastAPI приложение, имитирующие работу простой
 Стек технологий:
  - FastAPI
  - SQLAlchemy
+ - Alembic
  - PostgreSQL
  - Docker compose
 

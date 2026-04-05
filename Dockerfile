@@ -12,7 +12,7 @@ COPY . /app
 RUN python3.13 -m pip --no-cache-dir install --upgrade pip
 RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-root --no-cache
+RUN poetry install --no-cache
 
 EXPOSE ${APP_PORT}
 
