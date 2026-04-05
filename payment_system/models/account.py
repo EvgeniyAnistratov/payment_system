@@ -11,6 +11,6 @@ class Account(Base):
     balance: Mapped[int] = mapped_column(Integer, default=0)
     user_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("user.id", ondelete="CASCADE"),
+        ForeignKey("users.id", ondelete="CASCADE"),
         index=True
     )

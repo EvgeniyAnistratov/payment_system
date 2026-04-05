@@ -11,7 +11,7 @@ class Transaction(Base):
     amount: Mapped[int] = mapped_column(Integer)
     user_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("user.id", ondelete="CASCADE"),
+        ForeignKey("users.id", ondelete="CASCADE"),
         index=True,
     )
     account_id: Mapped[int] = mapped_column(
