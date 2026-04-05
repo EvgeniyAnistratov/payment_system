@@ -36,4 +36,5 @@ class User(Base):
 
     @property
     def fullname(self):
-        return f"{self.surname} {self.first_name} {self.last_name}"
+        fullname = f"{self.surname} {self.first_name}"
+        return fullname if self.last_name is None else fullname + f" {self.last_name}"
