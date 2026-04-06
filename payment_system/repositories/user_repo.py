@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from payment_system.models.user import User
+from payment_system.models import User
 
 
 class UserRepo:

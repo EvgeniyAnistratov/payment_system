@@ -2,8 +2,8 @@ from typing import AsyncIterable
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
 
-from payment_system.repositories.user_repo import UserRepo
-from payment_system.services.user_service import UserService
+from payment_system.repositories import AccountRepo, TransactionRepo, UserRepo
+from payment_system.services import AccountService, TransactionService, UserService
 
 
 class AppProvider(Provider):
@@ -24,6 +24,22 @@ class AppProvider(Provider):
     async def get_session(self, sessionmaker: async_sessionmaker[AsyncSession]) -> AsyncIterable[AsyncSession]:
         async with sessionmaker() as session:
             yield session
+    
+    @provide(scope=Scope.REQUEST)
+    def get_account_repo(self, session: AsyncSession) -> AccountRepo:
+        return AccountRepo(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_account_service(self, account_repo: AccountRepo) -> AccountService:
+        return AccountService(account_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def get_transaction_repo(self, session: AsyncSession) -> TransactionRepo:
+        return TransactionRepo(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_transaction_service(self, transaction_repo: TransactionRepo) -> TransactionService:
+        return TransactionService(transaction_repo)
 
     @provide(scope=Scope.REQUEST)
     def get_user_repo(self, session: AsyncSession) -> UserRepo:
