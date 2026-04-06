@@ -10,8 +10,8 @@ def make_password(raw_password):
     return bcrypt.hashpw(byte_password, salt).decode(_STR_ENCODING)
 
 
-def compare_passwords(provided_password, hashed_password):
+def compare_passwords(raw_password, hashed_password):
     return bcrypt.checkpw(
-        provided_password.encode(_STR_ENCODING),
+        raw_password.encode(_STR_ENCODING),
         hashed_password.encode(_STR_ENCODING)
     )

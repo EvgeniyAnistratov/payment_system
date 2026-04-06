@@ -3,7 +3,7 @@ from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
 
 from payment_system.repositories import AccountRepo, TransactionRepo, UserRepo
-from payment_system.services import AccountService, TransactionService, UserService
+from payment_system.services import AccountService, AuthService, TransactionService, UserService
 
 
 class AppProvider(Provider):
@@ -24,7 +24,11 @@ class AppProvider(Provider):
     async def get_session(self, sessionmaker: async_sessionmaker[AsyncSession]) -> AsyncIterable[AsyncSession]:
         async with sessionmaker() as session:
             yield session
-    
+
+    @provide(scope=Scope.REQUEST)
+    def get_auth_service(self, user_repo: UserRepo) -> AuthService:
+        return AuthService(user_repo)
+
     @provide(scope=Scope.REQUEST)
     def get_account_repo(self, session: AsyncSession) -> AccountRepo:
         return AccountRepo(session)
