@@ -2,11 +2,11 @@ from fastapi import HTTPException, status
 
 from app.models import User
 from app.repositories import UserRepo
-from app.schemes import (
-    CreateUserScheme,
-    UserScheme,
-    UserWithAccountScheme,
-    UpdateUserScheme
+from app.schemas import (
+    CreateUserSchema,
+    UserSchema,
+    UserWithAccountSchema,
+    UpdateUserSchema
 )
 from app.utils.passwords import make_password
 
@@ -21,13 +21,13 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         return user
 
-    async def get_user(self, user_id: int) -> UserScheme:
-        return UserScheme.model_validate(
+    async def get_user(self, user_id: int) -> UserSchema:
+        return UserSchema.model_validate(
             await self.__get_user(user_id),
             from_attributes=True
         )
 
-    async def create_user(self, user_data: CreateUserScheme) -> UserScheme:
+    async def create_user(self, user_data: CreateUserSchema) -> UserSchema:
         existed_user = await self.repo.get_by_email(user_data.email)
         if existed_user is not None:
             raise HTTPException(
@@ -46,9 +46,9 @@ class UserService:
         new_user = await self.repo.create_user(new_user)
         await self.repo.commit()
 
-        return UserScheme.model_validate(new_user, from_attributes=True)
+        return UserSchema.model_validate(new_user, from_attributes=True)
 
-    async def update_user(self, user_id: int, user_data: UpdateUserScheme):
+    async def update_user(self, user_id: int, user_data: UpdateUserSchema):
         user = await self.__get_user(user_id)
 
         if user_data.password is not None:
@@ -61,7 +61,7 @@ class UserService:
 
         await self.repo.commit()
 
-        return UserScheme.model_validate(user, from_attributes=True)
+        return UserSchema.model_validate(user, from_attributes=True)
 
     async def delete_user(self, user_id: int):
         result = await self.repo.delete_by_id(user_id)
@@ -70,4 +70,4 @@ class UserService:
 
     async def get_users_with_accounts(self):
         users = await self.repo.get_users_with_accounts()
-        return [UserWithAccountScheme.model_validate(u, from_attributes=True) for u in users]
+        return [UserWithAccountSchema.model_validate(u, from_attributes=True) for u in users]

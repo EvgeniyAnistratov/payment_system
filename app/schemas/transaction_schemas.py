@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class TransactionScheme(BaseModel):
+class TransactionSchema(BaseModel):
     id: int
     amount: int
     user_id: int

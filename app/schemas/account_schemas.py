@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
 
-class BaseAccountSheme(BaseModel):
+class BaseAccountShema(BaseModel):
     id: int
     balance: int
 
 
-class AccountScheme(BaseAccountSheme):
+class AccountSchema(BaseAccountShema):
     user_id: int

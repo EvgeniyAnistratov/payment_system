@@ -3,10 +3,10 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field, SecretStr, model_validator
 from pydantic_core import PydanticCustomError
 
-from .account_schemes import BaseAccountSheme
+from .account_schemas import BaseAccountShema
 
 
-class CreateUserScheme(BaseModel):
+class CreateUserSchema(BaseModel):
     first_name: str = Field(examples=["Ivan"])
     surname: str = Field(examples=["Ivanov"])
     last_name: str | None = Field(examples=["Ivanovich"])
@@ -14,7 +14,7 @@ class CreateUserScheme(BaseModel):
     password: SecretStr = Field(examples=["secret_string"], min_length=8)
 
 
-class UpdateUserScheme(BaseModel):
+class UpdateUserSchema(BaseModel):
     first_name: Optional[str] = Field(default=None, examples=["Ivan"])
     surname: Optional[str] = Field(default=None, examples=["Ivanov"])
     last_name: Optional[str | None] = Field(default=None, examples=["Ivanovich"])
@@ -29,11 +29,11 @@ class UpdateUserScheme(BaseModel):
         return self
 
 
-class UserScheme(BaseModel):
+class UserSchema(BaseModel):
     id: int
     email: EmailStr
     fullname: str
 
 
-class UserWithAccountScheme(UserScheme):
-    accounts: List[BaseAccountSheme]
+class UserWithAccountSchema(UserSchema):
+    accounts: List[BaseAccountShema]

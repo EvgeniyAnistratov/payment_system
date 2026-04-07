@@ -4,17 +4,17 @@ from fastapi import APIRouter, Depends
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.schemes import TokenScheme
+from app.schemas import TokenSchema
 from app.services import AuthService
 
 
 auth_router = APIRouter(route_class=DishkaRoute, prefix="/auth", tags=["auth"])
 
 
-@auth_router.post("/token", response_model=TokenScheme)
+@auth_router.post("/token", response_model=TokenSchema)
 async def get_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: FromDishka[AuthService]
 ):
     access_token = await auth_service.login(form_data.username, form_data.password)
-    return TokenScheme(access_token=access_token, token_type="bearer")
+    return TokenSchema(access_token=access_token, token_type="bearer")

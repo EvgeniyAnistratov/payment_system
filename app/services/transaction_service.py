@@ -1,5 +1,5 @@
 from app.repositories import TransactionRepo
-from app.schemes import TransactionScheme
+from app.schemas import TransactionSchema
 
 
 class TransactionService:
@@ -8,4 +8,4 @@ class TransactionService:
 
     async def get_list_by_user_id(self, user_id: int):
         accounts = await self.repo.get_by_user_id(user_id)
-        return [TransactionScheme.model_validate(obj, from_attributes=True) for obj in accounts]
+        return [TransactionSchema.model_validate(obj, from_attributes=True) for obj in accounts]
