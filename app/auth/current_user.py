@@ -6,10 +6,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 
-from payment_system.core import settings
-from payment_system.models import User
-from payment_system.repositories import UserRepo
-from payment_system.utils.tokens import decode_token
+from app.core import settings
+from app.models import User
+from app.repositories import UserRepo
+from app.utils.tokens import decode_token
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.JWT_TOKEN_URL)

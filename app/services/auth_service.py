@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
 
-from payment_system.repositories.user_repo import UserRepo
-from payment_system.utils.passwords import compare_passwords
-from payment_system.utils.tokens import get_access_token
+from app.repositories.user_repo import UserRepo
+from app.utils.passwords import compare_passwords
+from app.utils.tokens import get_access_token
 
 
 class AuthService:

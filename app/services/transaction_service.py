@@ -1,5 +1,5 @@
-from payment_system.repositories import TransactionRepo
-from payment_system.schemes import TransactionScheme
+from app.repositories import TransactionRepo
+from app.schemes import TransactionScheme
 
 
 class TransactionService:

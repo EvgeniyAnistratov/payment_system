@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from payment_system.constants.enums import Role
+from app.constants.enums import Role
 
 from .base import Base
 

@@ -1,7 +1,7 @@
 import datetime
 import jwt
 
-from payment_system.core import settings
+from app.core import settings
 
 
 def get_access_token(user_id: int) -> str:

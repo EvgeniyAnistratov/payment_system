@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi.security import OAuth2PasswordRequestForm
 
-from payment_system.schemes import TokenScheme
-from payment_system.services import AuthService
+from app.schemes import TokenScheme
+from app.services import AuthService
 
 
 auth_router = APIRouter(route_class=DishkaRoute, prefix="/auth", tags=["auth"])

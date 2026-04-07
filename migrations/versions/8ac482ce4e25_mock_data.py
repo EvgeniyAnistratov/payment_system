@@ -7,7 +7,7 @@ Create Date: 2026-04-05 19:19:44.394008
 """
 from typing import Sequence, Union
 from alembic import op
-from payment_system.utils.passwords import make_password
+from app.utils.passwords import make_password
 
 
 # revision identifiers, used by Alembic.

@@ -2,8 +2,8 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, load_only
 
-from payment_system.models import Account, User
-from payment_system.models import Account
+from app.models import Account, User
+from app.models import Account
 
 
 class UserRepo:

@@ -1,10 +1,14 @@
 from fastapi import HTTPException, status
 
-from payment_system.models import User
-from payment_system.repositories import UserRepo
-from payment_system.schemes import CreateUserScheme, UserScheme, UserWithAccountScheme
-from payment_system.schemes.user_schemes import UpdateUserScheme
-from payment_system.utils.passwords import make_password
+from app.models import User
+from app.repositories import UserRepo
+from app.schemes import (
+    CreateUserScheme,
+    UserScheme,
+    UserWithAccountScheme,
+    UpdateUserScheme
+)
+from app.utils.passwords import make_password
 
 
 class UserService:

@@ -3,22 +3,22 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, Response, status
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 
-from payment_system.auth.current_user import get_current_user
-from payment_system.auth.permissions import has_role, is_owner_or_admin
-from payment_system.constants.enums import Role
-from payment_system.models import User
-from payment_system.schemes import (
+from app.auth.current_user import get_current_user
+from app.auth.permissions import has_role, is_owner_or_admin
+from app.constants.enums import Role
+from app.models import User
+from app.schemes import (
     AccountScheme,
     TransactionScheme,
     CreateUserScheme, UserScheme, UpdateUserScheme, UserWithAccountScheme
 )
-from payment_system.services import AccountService, TransactionService, UserService
+from app.services import AccountService, TransactionService, UserService
 
 
 user_router = APIRouter(route_class=DishkaRoute, prefix="/users", tags=["users"])
 
 
-@user_router.get("", response_model=UserWithAccountScheme)
+@user_router.get("", response_model=List[UserWithAccountScheme])
 @has_role(Role.ADMIN)
 async def get_all_users_with_accounts(
     current_user: Annotated[str, Depends(get_current_user)],

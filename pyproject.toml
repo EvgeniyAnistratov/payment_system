@@ -24,6 +24,9 @@ dependencies = [
     "python-multipart (>=0.0.24,<0.0.25)",
 ]
 
+[tool.fastapi]
+entrypoint = "app.main:app"
+
 [tool.poetry]
 package-mode = false
 

@@ -2,7 +2,7 @@ from functools import wraps
 
 from fastapi import HTTPException, status
 
-from payment_system.constants.enums import Role
+from app.constants.enums import Role
 
 
 forbidden_execption = HTTPException(

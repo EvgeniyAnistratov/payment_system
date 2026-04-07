@@ -1,5 +1,5 @@
-from payment_system.repositories import AccountRepo
-from payment_system.schemes import AccountScheme
+from app.repositories import AccountRepo
+from app.schemes import AccountScheme
 
 
 class AccountService:

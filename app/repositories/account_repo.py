@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from payment_system.models import Account
+from app.models import Account
 
 
 class AccountRepo:

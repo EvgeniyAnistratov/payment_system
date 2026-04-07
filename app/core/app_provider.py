@@ -2,8 +2,8 @@ from typing import AsyncIterable
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
 
-from payment_system.repositories import AccountRepo, TransactionRepo, UserRepo
-from payment_system.services import AccountService, AuthService, TransactionService, UserService
+from app.repositories import AccountRepo, TransactionRepo, UserRepo
+from app.services import AccountService, AuthService, TransactionService, UserService
 
 
 class AppProvider(Provider):
