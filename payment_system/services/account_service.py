@@ -1,5 +1,5 @@
 from payment_system.repositories import AccountRepo
-from payment_system.schemas import AccountSchema
+from payment_system.schemes import AccountScheme
 
 
 class AccountService:
@@ -8,4 +8,4 @@ class AccountService:
 
     async def get_list_by_user_id(self, user_id: int):
         accounts = await self.repo.get_by_user_id(user_id)
-        return [AccountSchema.model_validate(obj, from_attributes=True) for obj in accounts]
+        return [AccountScheme.model_validate(obj, from_attributes=True) for obj in accounts]
