@@ -1,4 +1,34 @@
 # payment_system
+
+<details>
+<summary><span style="font-size: 24px;">Оглавление</span></summary>
+
+- [payment\_system](#payment_system)
+  - [Описание проекта](#описание-проекта)
+  - [Переменные окружения](#переменные-окружения)
+    - [Описание перменных окружения](#описание-перменных-окружения)
+      - [APP\_PORT](#app_port)
+      - [DB\_HOST](#db_host)
+      - [DB\_NAME](#db_name)
+      - [DB\_PASSWORD](#db_password)
+      - [DB\_PORT](#db_port)
+      - [DB\_USER](#db_user)
+      - [DB\_LOGGING](#db_logging)
+      - [JWT\_ACCESS\_TTL](#jwt_access_ttl)
+      - [JWT\_ALGORITHM](#jwt_algorithm)
+      - [JWT\_SECRET\_KEY](#jwt_secret_key)
+  - [Запуск приложения](#запуск-приложения)
+    - [Запуск приложения через docker compose](#запуск-приложения-через-docker-compose)
+    - [Запуск приложения без docker](#запуск-приложения-без-docker)
+  - [Тестовые данные](#тестовые-данные)
+    - [User](#user)
+    - [Account](#account)
+
+</details>
+
+
+## Описание проекта
+
 FastAPI приложение, имитирующие работу простой системы платежей.
 Предоставляет REST API для работы с пользователями, администраторами,
 счетами, переводами.
@@ -125,3 +155,18 @@ alembic upgrade head
 uvicorn main:app
 ```
 
+
+## Тестовые данные
+### User
+Описание тестовых данных пользователей
+
+| id | email             | first_name | surname | last_name  | role  | password       |
+|----|-------------------|------------|---------|------------|-------|----------------|
+| 1  | admin@example.com | Admin      | user    | NULL       | ADMIN | admin_password |
+| 2  | user@example.com  | Ivan       | Ivanov  | Ivanovich  | USER  | user_password  |
+
+### Account
+Описание тестовых данных счетов пользователей
+| id | balance | user_id |
+|----|---------|---------|
+| 1  | 50      | 2       |
