@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 
 from payment_system.models import User
 from payment_system.repositories import UserRepo
-from payment_system.schemes import CreateUserScheme, UserScheme
+from payment_system.schemes import CreateUserScheme, UserScheme, UserWithAccountScheme
 from payment_system.schemes.user_schemes import UpdateUserScheme
 from payment_system.utils.passwords import make_password
 
@@ -63,3 +63,7 @@ class UserService:
         result = await self.repo.delete_by_id(user_id)
         if result == 0:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    async def get_users_with_accounts(self):
+        users = await self.repo.get_users_with_accounts()
+        return [UserWithAccountScheme.model_validate(u, from_attributes=True) for u in users]

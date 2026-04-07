@@ -38,3 +38,6 @@ class User(Base):
     def fullname(self):
         fullname = f"{self.surname} {self.first_name}"
         return fullname if self.last_name is None else fullname + f" {self.last_name}"
+
+    def __str__(self):
+        return f"{self.id}: {self.fullname}"

@@ -10,12 +10,22 @@ from payment_system.models import User
 from payment_system.schemes import (
     AccountScheme,
     TransactionScheme,
-    CreateUserScheme, UserScheme, UpdateUserScheme
+    CreateUserScheme, UserScheme, UpdateUserScheme, UserWithAccountScheme
 )
 from payment_system.services import AccountService, TransactionService, UserService
 
 
 user_router = APIRouter(route_class=DishkaRoute, prefix="/users", tags=["users"])
+
+
+@user_router.get("", response_model=UserWithAccountScheme)
+@has_role(Role.ADMIN)
+async def get_all_users_with_accounts(
+    current_user: Annotated[str, Depends(get_current_user)],
+    user_service: FromDishka[UserService]
+):
+    result = await user_service.get_users_with_accounts()
+    return result
 
 
 @user_router.post("", response_model=UserScheme)

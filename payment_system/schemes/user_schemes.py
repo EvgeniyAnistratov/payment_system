@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field, SecretStr, model_validator
 from pydantic_core import PydanticCustomError
+
+from .account_schemes import BaseAccountSheme
 
 
 class CreateUserScheme(BaseModel):
@@ -31,3 +33,7 @@ class UserScheme(BaseModel):
     id: int
     email: EmailStr
     fullname: str
+
+
+class UserWithAccountScheme(UserScheme):
+    accounts: List[BaseAccountSheme]

@@ -14,3 +14,6 @@ class Account(Base):
         ForeignKey("users.id", ondelete="CASCADE"),
         index=True
     )
+
+    def __str__(self):
+        return f"{self.id}: user_id={self.user_id} balance={self.balance}"
