@@ -42,8 +42,12 @@ class AppProvider(Provider):
         return TransactionRepo(session)
 
     @provide(scope=Scope.REQUEST)
-    def get_transaction_service(self, transaction_repo: TransactionRepo) -> TransactionService:
-        return TransactionService(transaction_repo)
+    def get_transaction_service(
+        self,
+        ac_repo: AccountRepo,
+        transaction_repo: TransactionRepo
+    ) -> TransactionService:
+        return TransactionService(ac_repo, transaction_repo)
 
     @provide(scope=Scope.REQUEST)
     def get_user_repo(self, session: AsyncSession) -> UserRepo:

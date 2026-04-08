@@ -2,6 +2,7 @@ from python_utils.settings import read_variable, ConfigVarType
 
 # APP SETTINGS
 APP_TITLE = "Payment system"
+APP_TRANSACTION_SECRET: str = read_variable("APP_TRANSACTION_SECRET")
 
 # JWT SETTINGS
 JWT_ACCESS_TTL: int = read_variable(
