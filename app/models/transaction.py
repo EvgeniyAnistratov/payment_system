@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer, String, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -20,3 +20,4 @@ class Transaction(Base):
         index=True,
     )
     transaction_id: Mapped[str] = mapped_column(String, unique=True)
+    signature: Mapped[bytes] = mapped_column(LargeBinary(32))

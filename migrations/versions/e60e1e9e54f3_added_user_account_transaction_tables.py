@@ -50,6 +50,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('account_id', sa.Integer(), nullable=False),
     sa.Column('transaction_id', sa.String(), nullable=False),
+    sa.Column('signature', sa.LargeBinary(length=32), nullable=False),
     sa.ForeignKeyConstraint(['account_id'], ['account.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
