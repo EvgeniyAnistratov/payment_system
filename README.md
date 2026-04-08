@@ -24,6 +24,7 @@
   - [Тестовые данные](#тестовые-данные)
     - [User](#user)
     - [Account](#account)
+  - [Подготовка данных для /api/transactions эндпоинта](#подготовка-данных-для-apitransactions-эндпоинта)
 
 </details>
 
@@ -175,3 +176,22 @@ uvicorn app.main:app
 | id | balance | user_id |
 |----|---------|---------|
 | 1  | 50      | 2       |
+
+
+## Подготовка данных для /api/transactions эндпоинта
+Данные для endpoint'а /transaction можно подготовить в интерактивной оболочке python.
+
+```python
+from uuid import uuid4
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from app.core.settings import APP_TRANSACTION_SECRET
+from app.utils.signature import generate_signature
+
+payload = {"user_id": 2, "account_id": 2, "amount": 50, "transaction_id": uuid4().__str__()}
+signature = generate_signature(payload, APP_TRANSACTION_SECRET)
+
+# подпись и данные из payload теперь можно использовать в POST /transactions
+```
