@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Response, status
-from sqlalchemy.exc import DatabaseError
+from sqlalchemy.exc import IntegrityError
 
 from app.models import Transaction
 from app.models.account import Account
@@ -23,10 +23,7 @@ class TransactionService:
         return [TransactionSchema.model_validate(obj, from_attributes=True) for obj in accounts]
 
     async def process_transaction(self, transaction: TransactionSchema):
-        payload = transaction.model_dump()
-        signature = payload.pop("signature")
-
-        if not check_singature(payload, signature, APP_TRANSACTION_SECRET):
+        if not self._verify_signature(transaction):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid signature"
@@ -36,46 +33,49 @@ class TransactionService:
 
         return Response(status_code=status.HTTP_201_CREATED)
 
+    def _verify_signature(self, transaction: TransactionSchema):
+        payload = transaction.model_dump()
+        signature = payload.pop("signature")
+
+        return check_singature(payload, signature, APP_TRANSACTION_SECRET)
+
     async def _save_transaction(self, transaction: TransactionSchema):
+        session = self.account_repo.session
+
         try:
-            if await self.transaction_repo.get_by_transaction_id(transaction.transaction_id) is not None:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail=f"Transaction with id {transaction.transaction_id} already exists"
+            async with session.begin():
+                exists = await self.transaction_repo.get_by_transaction_id(
+                    transaction.transaction_id
+                )
+                if exists:
+                    return
+
+                account = await self.account_repo.select_for_update(
+                    transaction.account_id
                 )
 
-            account = await self.account_repo.select_for_update(transaction.account_id)
-            if account is None:
-                new_account = Account(
-                    id=transaction.account_id,
-                    balance=0,
-                    user_id=transaction.user_id
-                )
-                await self.account_repo.create(new_account)
-                await self.account_repo.commit()
-
-                account = await self.account_repo.select_for_update(transaction.account_id)
                 if account is None:
-                    raise HTTPException(
-                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                        detail="Unexpected error occurred while processing a transaction"
+                    account = await self.account_repo.create(
+                        Account(
+                            id=transaction.account_id,
+                            balance=0,
+                            user_id=transaction.user_id
+                        )
                     )
+                    account = await self.account_repo.select_for_update(account.id)
 
-            new_transaction = Transaction(
-                amount=transaction.amount,
-                user_id=transaction.user_id,
-                account_id=transaction.account_id,
-                transaction_id=transaction.transaction_id,
-                signature=bytes.fromhex(transaction.signature)
-            )
-            await self.transaction_repo.create(new_transaction)
+                await self.transaction_repo.create(
+                    Transaction(
+                        amount=transaction.amount,
+                        user_id=transaction.user_id,
+                        account_id=transaction.account_id,
+                        transaction_id=transaction.transaction_id,
+                        signature=bytes.fromhex(transaction.signature)
+                    )
+                )
 
-            account.balance += new_transaction.amount
+                account.balance += transaction.amount
 
-            await self.transaction_repo.commit()
-        except DatabaseError as e:
-            await self.transaction_repo.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Unexpected error occurred while processing a transaction"
-            )
+        except IntegrityError:
+            # ignore transaction_id duplicates
+            return

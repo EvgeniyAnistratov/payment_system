@@ -169,7 +169,7 @@ uvicorn app.main:app
 | id | email             | first_name | surname | last_name  | role  | password       |
 |----|-------------------|------------|---------|------------|-------|----------------|
 | 1  | admin@example.com | Admin      | user    | NULL       | ADMIN | admin_password |
-| 2  | user@example.com  | Ivan       | Ivanov  | Ivanovich  | USER  | user_password  |
+| 2  | ivan@example.com  | Ivan       | Ivanov  | Ivanovich  | USER  | user_password  |
 
 ### Account
 Описание тестовых данных счетов пользователей
