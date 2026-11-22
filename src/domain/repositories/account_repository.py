@@ -1,0 +1,13 @@
+from typing import Protocol
+
+from src.domain.entities.account import Account
+
+
+class AccountRepository(Protocol):
+    async def list_by_user_id(self, user_id: int) -> list[Account]: ...
+
+    async def add_if_absent(self, account: Account) -> None: ...
+
+    async def get_for_update(self, account_id: int) -> Account | None: ...
+
+    async def save(self, account: Account) -> None: ...

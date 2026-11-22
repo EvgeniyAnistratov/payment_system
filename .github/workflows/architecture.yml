@@ -1,0 +1,18 @@
+name: architecture
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  import-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install import-linter
+        run: pip install "import-linter>=2.16,<3"
+      - name: Check layer boundaries
+        run: lint-imports

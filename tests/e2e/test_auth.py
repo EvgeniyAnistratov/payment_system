@@ -33,8 +33,10 @@ async def test_login_rejects_unknown_email_and_wrong_password(client):
 
     assert unknown.status_code == 401
     assert unknown.json()["detail"] == "Could not validate credentials"
+    assert unknown.headers["www-authenticate"] == "Bearer"
     assert wrong_password.status_code == 401
     assert wrong_password.json()["detail"] == "Could not validate credentials"
+    assert wrong_password.headers["www-authenticate"] == "Bearer"
 
 
 async def test_missing_and_invalid_token_are_rejected(client):
@@ -43,5 +45,7 @@ async def test_missing_and_invalid_token_are_rejected(client):
 
     assert missing.status_code == 401
     assert missing.json()["detail"] == "Not authenticated"
+    assert missing.headers["www-authenticate"] == "Bearer"
     assert invalid.status_code == 401
     assert invalid.json()["detail"] == "Could not validate credentials"
+    assert invalid.headers["www-authenticate"] == "Bearer"

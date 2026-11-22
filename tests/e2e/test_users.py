@@ -1,5 +1,3 @@
-import pytest
-
 from tests.helpers.api import USER_EMAIL
 
 SEEDED_USERS = [
@@ -60,7 +58,7 @@ async def test_missing_user_returns_404(client, admin_headers):
     response = await client.get("/users/99999", headers=admin_headers)
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Not Found"
+    assert response.json()["detail"] == "User 99999 not found"
 
 
 async def test_admin_creates_user_and_duplicate_email_conflicts(client, admin_headers):
@@ -146,7 +144,6 @@ async def test_update_and_delete_of_missing_user_return_404(client, admin_header
     assert delete.status_code == 404
 
 
-@pytest.mark.xfail(reason="DELETE /users/{id} does not commit, so the user stays", strict=False)
 async def test_admin_delete_removes_user(client, admin_headers):
     created = await client.post("/users", json=NEW_USER, headers=admin_headers)
     assert created.status_code == 200
@@ -159,7 +156,6 @@ async def test_admin_delete_removes_user(client, admin_headers):
     assert fetched.status_code == 404
 
 
-@pytest.mark.xfail(reason="PATCH with a taken email returns 500 instead of 409", strict=False)
 async def test_update_to_taken_email_conflicts(client, admin_headers):
     response = await client.patch(
         "/users/2",
@@ -173,10 +169,6 @@ async def test_update_to_taken_email_conflicts(client, admin_headers):
     assert profile.json()["email"] == USER_EMAIL
 
 
-@pytest.mark.xfail(
-    reason="explicit null last_name is treated as an omitted field",
-    strict=False,
-)
 async def test_update_can_clear_last_name(client, admin_headers):
     response = await client.patch(
         "/users/2",

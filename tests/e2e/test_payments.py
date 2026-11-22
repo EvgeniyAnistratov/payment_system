@@ -1,7 +1,5 @@
 import asyncio
 
-import pytest
-
 from tests.helpers.payments import payment_payload
 
 
@@ -72,6 +70,7 @@ async def test_payment_with_invalid_signature_changes_nothing(client, user_heade
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid signature"
+    assert response.headers["www-authenticate"] == "Bearer"
     assert await _accounts(client, user_headers, 2) == [{"id": 1, "balance": 50, "user_id": 2}]
     assert await _transactions(client, user_headers, 2) == []
 
@@ -106,10 +105,6 @@ async def test_payment_creates_missing_account_for_the_user(client, user_headers
     assert transactions[0]["transaction_id"] == payload["transaction_id"]
 
 
-@pytest.mark.xfail(
-    reason="unknown user_id is swallowed and the webhook returns 201",
-    strict=False,
-)
 async def test_payment_for_unknown_user_is_not_found(client, admin_headers):
     payload = payment_payload(user_id=99999, account_id=88, amount=40)
 
@@ -121,14 +116,8 @@ async def test_payment_for_unknown_user_is_not_found(client, admin_headers):
     assert await _accounts(client, admin_headers, 2) == [{"id": 1, "balance": 50, "user_id": 2}]
 
 
-@pytest.mark.xfail(
-    reason="concurrent payments for a new account can lose a payment and still return 201",
-    strict=False,
-)
 async def test_parallel_payments_on_a_new_account_are_all_applied(client, user_headers):
     amounts = [10, 15, 20, 25, 30, 35, 40, 45]
-    # Several fresh accounts: one burst can slip through without overlapping,
-    # and the lost payment only happens when two inserts race.
     account_ids = (5001, 5002, 5003, 5004)
     payloads_by_account = {
         account_id: [
@@ -152,10 +141,6 @@ async def test_parallel_payments_on_a_new_account_are_all_applied(client, user_h
         assert saved_ids == {payload["transaction_id"] for payload in payloads}
 
 
-@pytest.mark.xfail(
-    reason="B4: a payment is credited to an account owned by another user",
-    strict=False,
-)
 async def test_payment_to_someone_elses_account_is_rejected(client, admin_headers, user_headers):
     payload = payment_payload(user_id=1, account_id=1, amount=100)
 
