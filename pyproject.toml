@@ -60,6 +60,11 @@ src = [".", "src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 
+[tool.mypy]
+python_version = "3.13"
+strict = true
+files = ["src/domain", "src/application"]
+
 [tool.importlinter]
 root_package = "src"
 include_external_packages = true
