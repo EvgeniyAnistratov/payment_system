@@ -184,21 +184,19 @@ uvicorn src.main:app
 
 
 ## Подготовка данных для /api/transactions эндпоинта
-Данные для endpoint'а /transaction можно подготовить в интерактивной оболочке python.
 
-```python
-from uuid import uuid4
-from dotenv import load_dotenv
+Скрипт собирает JSON для `POST /transactions` и подписывает его секретом
+`APP_TRANSACTION_SECRET` из `.env`.
 
-load_dotenv()
+```bash
+poetry run python scripts/prepare_transaction.py
+```
 
-from app.core.settings import APP_TRANSACTION_SECRET
-from app.utils.signature import generate_signature
+По умолчанию `user_id=2`, `account_id=2`, `amount=50`, а `transaction_id` —
+новый UUID. Свои значения передаются флагами:
 
-payload = {"user_id": 2, "account_id": 2, "amount": 50, "transaction_id": uuid4().__str__()}
-signature = generate_signature(payload, APP_TRANSACTION_SECRET)
-
-# подпись и данные из payload теперь можно использовать в POST /transactions
+```bash
+poetry run python scripts/prepare_transaction.py --user-id 2 --account-id 1 --amount 50
 ```
 
 ### Платёж на чужой счёт
@@ -283,18 +281,11 @@ poetry run pytest
 docker-compose --env-file .env.test -f compose.test.yaml down
 ```
 
-Тесты на известные ошибки удаления пользователя, платежа несуществующему
-пользователю, гонки при создании счёта, платежа на чужой счёт, занятого email
-и обнуления `last_name` описывают правильное поведение и помечены `xfail`.
-Пока реализация их не закрывает, падение этих тестов ожидаемо. После
-исправления метку `xfail` нужно снять.
-
-
 ### Границы слоёв
 
-`import-linter` проверяет пакет `src`: `domain`, `application`,
-`infrastructure`, `presentation` и `bootstrap`. Легаси-пакет `app` в
-проверку не входит, пока его не удалят.
+`import-linter` проверяет весь пакет `src`. Каждый модуль входит в один слой:
+`main`, `bootstrap`, `presentation`, `infrastructure`, `application` или
+`domain`. `presentation` и `infrastructure` не импортируют друг друга.
 
 ```bash
 poetry run lint-imports
