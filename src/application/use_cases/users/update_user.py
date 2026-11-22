@@ -1,5 +1,5 @@
 from src.application.dtos.auth import AuthContext
-from src.application.dtos.user import UNSET, UpdateUserInput, UserOutput, to_user_output
+from src.application.dtos.user import Unset, UpdateUserInput, UserOutput, to_user_output
 from src.application.ports.password_hasher import PasswordHasher
 from src.application.ports.transaction_manager import TransactionManager
 from src.application.services.access_policy import ensure_admin
@@ -46,8 +46,9 @@ class UpdateUserUseCase:
                 rename_args["first_name"] = data.first_name
             if data.surname is not None:
                 rename_args["surname"] = data.surname
-            if data.last_name is not UNSET:
-                rename_args["last_name"] = data.last_name
+            last_name = data.last_name
+            if not isinstance(last_name, Unset):
+                rename_args["last_name"] = last_name
             if rename_args:
                 user.rename(**rename_args)
 
