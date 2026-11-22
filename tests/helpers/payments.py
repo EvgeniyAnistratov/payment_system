@@ -1,5 +1,9 @@
 from uuid import uuid4
 
+from src.application.dtos.payment import ProcessPaymentInput
+from src.infrastructure.config.settings import AppSettings
+from src.infrastructure.services.sha256_payment_signature import Sha256PaymentSignature
+
 
 def payment_payload(
     *,
@@ -9,16 +13,20 @@ def payment_payload(
     transaction_id: str | None = None,
     signature: str | None = None,
 ) -> dict:
-    payload = {
+    transaction_id = transaction_id or str(uuid4())
+    if signature is None:
+        draft = ProcessPaymentInput(
+            transaction_id=transaction_id,
+            account_id=account_id,
+            user_id=user_id,
+            amount=amount,
+            signature="",
+        )
+        signature = Sha256PaymentSignature(AppSettings()).sign(draft)
+    return {
         "user_id": user_id,
         "account_id": account_id,
         "amount": amount,
-        "transaction_id": transaction_id or str(uuid4()),
+        "transaction_id": transaction_id,
+        "signature": signature,
     }
-    if signature is None:
-        from app.core.settings import APP_TRANSACTION_SECRET
-        from app.utils.signature import generate_signature
-
-        signature = generate_signature(payload, APP_TRANSACTION_SECRET)
-    payload["signature"] = signature
-    return payload

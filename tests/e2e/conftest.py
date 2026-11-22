@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 from sqlalchemy import create_engine, text
 
+from src.infrastructure.config.settings import DbSettings
 from tests.helpers.api import (
     ADMIN_EMAIL,
     ADMIN_PASSWORD,
@@ -39,11 +40,10 @@ DELETE FROM users WHERE id NOT IN (1, 2);
 
 
 def _restore_seed(engine) -> None:
-    from app.core.settings import DB_NAME
-
-    if "test" not in DB_NAME:
+    db_name = DbSettings().name
+    if "test" not in db_name:
         raise RuntimeError(
-            f"Refusing to reset database {DB_NAME!r}: the name must contain 'test'"
+            f"Refusing to reset database {db_name!r}: the name must contain 'test'"
         )
 
     with engine.begin() as connection:
@@ -72,9 +72,7 @@ def apply_migrations():
 
 @pytest.fixture(scope="session")
 def sync_engine(apply_migrations):
-    from app.core.settings import get_alembic_url
-
-    engine = create_engine(get_alembic_url(), pool_pre_ping=True)
+    engine = create_engine(DbSettings().sync_url, pool_pre_ping=True)
     yield engine
     engine.dispose()
 
