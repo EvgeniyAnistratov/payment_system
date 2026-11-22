@@ -1,12 +1,14 @@
 # payment_system
 
+[Русский](README.ru.md)
+
 <details>
-<summary><span style="font-size: 24px;">Оглавление</span></summary>
+<summary><span style="font-size: 24px;">Contents</span></summary>
 
 - [payment\_system](#payment_system)
-  - [Описание проекта](#описание-проекта)
-  - [Переменные окружения](#переменные-окружения)
-    - [Описание перменных окружения](#описание-перменных-окружения)
+  - [Project description](#project-description)
+  - [Environment variables](#environment-variables)
+    - [Description of environment variables](#description-of-environment-variables)
       - [APP\_PORT](#app_port)
       - [APP\_TRANSACTION\_SECRET](#app_transaction_secret)
       - [DB\_HOST](#db_host)
@@ -18,29 +20,29 @@
       - [JWT\_ACCESS\_TTL](#jwt_access_ttl)
       - [JWT\_ALGORITHM](#jwt_algorithm)
       - [JWT\_SECRET\_KEY](#jwt_secret_key)
-  - [Запуск приложения](#запуск-приложения)
-    - [Запуск приложения через docker compose](#запуск-приложения-через-docker-compose)
-    - [Запуск приложения без docker](#запуск-приложения-без-docker)
-  - [Тестовые данные](#тестовые-данные)
+  - [Running the application](#running-the-application)
+    - [Running the application with docker compose](#running-the-application-with-docker-compose)
+    - [Running the application without docker](#running-the-application-without-docker)
+  - [Test data](#test-data)
     - [User](#user)
     - [Account](#account)
-  - [Подготовка данных для /api/transactions эндпоинта](#подготовка-данных-для-apitransactions-эндпоинта)
-    - [Платёж на чужой счёт](#платёж-на-чужой-счёт)
-  - [Тесты](#тесты)
-    - [Запуск end-to-end тестов](#запуск-end-to-end-тестов)
-    - [Запуск всех тестов](#запуск-всех-тестов)
-    - [Границы слоёв](#границы-слоёв)
+  - [Preparing data for the /api/transactions endpoint](#preparing-data-for-the-apitransactions-endpoint)
+    - [Payment to someone else's account](#payment-to-someone-elses-account)
+  - [Tests](#tests)
+    - [Running end-to-end tests](#running-end-to-end-tests)
+    - [Running all tests](#running-all-tests)
+    - [Layer boundaries](#layer-boundaries)
 
 </details>
 
 
-## Описание проекта
+## Project description
 
-FastAPI приложение, имитирующие работу простой системы платежей.
-Предоставляет REST API для работы с пользователями, администраторами,
-счетами, переводами.
+A FastAPI application that simulates a simple payment system.
+It provides a REST API for working with users, administrators,
+accounts, and transfers.
 
-Стек технологий:
+Technology stack:
  - FastAPI
  - SQLAlchemy
  - Alembic
@@ -48,128 +50,128 @@ FastAPI приложение, имитирующие работу простой
  - Docker compose
 
 
-## Переменные окружения
-Список ожидаемых переменных окружения, используемых приложением, описан в
-файле .env.example. Переменные окружения могут быть настроены в файле .env,
-для этого нужно скопировать файл .env.example под именем .env и настроить
-переменные окружения в этом файле:
+## Environment variables
+The list of environment variables expected by the application is described in
+the .env.example file. Environment variables can be configured in the .env
+file. To do that, copy .env.example to .env and set
+the environment variables in that file:
 
 ```bash
 cp .env.example .env
 ```
 
-Также переменные окружения можно настроить без создания файла ___.env___ в
-корневой директории проекта. Для этого все переменные окружения можно
-настроить как __переменные окружения__ или __переменные оболочки__. Например,
-с помощью команды ___export___ (встроенной утилиты оболочки Linux Bash:
-___export ENV_NAME=ENV_VALUE___), или другим доступным способом.<br />
+Environment variables can also be configured without creating an ___.env___ file in
+the project root directory. To do that, all environment variables can be
+set as __environment variables__ or __shell variables__. For example,
+with the ___export___ command (a built-in utility of the Linux Bash shell:
+___export ENV_NAME=ENV_VALUE___), or in another available way.<br />
 
-### Описание перменных окружения
+### Description of environment variables
 #### APP_PORT
-По умолчанию: __8000__ <br/>
-Порт, который будет прослушиваться приложением
+Default: __8000__ <br/>
+The port the application will listen on
 
 #### APP_TRANSACTION_SECRET
-По умолчанию: __<не определена>__ <br/>
-Секретный ключ для проверки подписи транзакции
+Default: __<not set>__ <br/>
+Secret key for verifying a transaction signature
 
 #### DB_HOST
-По умолчанию: __postgres__ <br />
-Хост БД. Если приложение будет запускаться в docker контейнере, и БД тоже
-будет запущена в docker контейнере, то значение хоста должно хранить имя
-сервиса БД, описанного в docker-compose файле.
+Default: __postgres__ <br />
+Database host. If the application will run in a docker container and the database
+will also run in a docker container, the host value must store the name
+of the database service described in the docker-compose file.
 
 #### DB_NAME
-По умолчанию: __payment_system_db__ <br />
-Имя БД.
+Default: __payment_system_db__ <br />
+Database name.
 
 #### DB_PASSWORD
-По умолчанию: __<не определена>__ <br />
-Пароль пользователя БД.
+Default: __<not set>__ <br />
+Database user password.
 
 #### DB_PORT
-По умолчанию: __5432__ <br />
-Порт БД.
+Default: __5432__ <br />
+Database port.
 
 #### DB_USER
-По умолчанию: __postgres__ <br />
-Имя роли для подключения к БД.
+Default: __postgres__ <br />
+Role name used to connect to the database.
 
 #### DB_LOGGING
-По умолчанию: __False__
-Включить логирование SQLAlchemy.
+Default: __False__
+Enable SQLAlchemy logging.
 
 #### JWT_ACCESS_TTL
-По умолчанию: __30__ <br />
-Время жизни access JWT токена в минутах.
+Default: __30__ <br />
+Access JWT token lifetime in minutes.
 
 #### JWT_ALGORITHM
-По умолчанию: __HS256__ <br />
-Алгоритм хеширования.
+Default: __HS256__ <br />
+Hashing algorithm.
 
 #### JWT_SECRET_KEY
-По умолчанию: __<не определена>__ <br />
-Секретный ключ для jwt библиотеки.
+Default: __<not set>__ <br />
+Secret key for the jwt library.
 
 
-## Запуск приложения
-### Запуск приложения через docker compose
-1. Выполнить настройку переменных окружения (см. раздел [Переменные окружения](#переменные-окружения)).
-   Использовать вариант с файлом .env. Убедиться, что переменная
-   DB_HOST хранит имя сервиса, описанного в docker-compose.yaml
+## Running the application
+### Running the application with docker compose
+1. Configure the environment variables (see [Environment variables](#environment-variables)).
+   Use the .env file option. Make sure the
+   DB_HOST variable stores the name of the service described in docker-compose.yaml
     - DB_HOST=postgres
-2. Запустить приложение в контейнере
+2. Start the application in a container
 ```bash
 docker-compose --env-file .env up
 ```
 
 
-### Запуск приложения без docker
-Ниже описаны шаги для запуска микросервиса. Подразумевается, что PostgreSQL
-уже установлен или запущен в docker контейнере.
+### Running the application without docker
+The steps below describe how to start the microservice. It is assumed that PostgreSQL
+is already installed or running in a docker container.
 
-В проекте используется менеджер пакетов и зависимостей
+The project uses the package and dependency manager
 [poetry](https://python-poetry.org/).
 
-Минимальная версия python: 3.13
+Minimum python version: 3.13
 
-1. Создание виртуального окружения python
+1. Create a python virtual environment
 ```bash
 python3 -m venv .venv
 ```
-2. Активация виртуального окружения
+2. Activate the virtual environment
 ```bash
 source .venv/bin/activate
 ```
-3. Обновление __pip__
+3. Upgrade __pip__
 ```bash
 python3 -m pip install --upgrade pip
 ```
-4. Установка __poetry__
+4. Install __poetry__
 ```bash
 pip install poetry
 ```
-5. Установка пакетов и зависимостей
+5. Install packages and dependencies
 ```bash
 poetry install --no-root
 ```
-6. Создание файла переменных окружения (подробно см. ["Переменные окружения"](#переменные-окружения))
+6. Create the environment variables file (see ["Environment variables"](#environment-variables) for details)
 ```bash
 cp .env.example .env
 ```
-7. Применение миграций к БД
+7. Apply migrations to the database
 ```bash
 alembic upgrade head
 ```
-8. Запуск локального сервера
+8. Start the local server
 ```bash
 uvicorn src.main:app
 ```
 
 
-## Тестовые данные
+## Test data
 ### User
-Описание тестовых данных пользователей
+Description of the test user data
 
 | id | email             | first_name | surname | last_name  | role  | password       |
 |----|-------------------|------------|---------|------------|-------|----------------|
@@ -177,97 +179,97 @@ uvicorn src.main:app
 | 2  | ivan@example.com  | Ivan       | Ivanov  | Ivanovich  | USER  | user_password  |
 
 ### Account
-Описание тестовых данных счетов пользователей
+Description of the test user account data
 | id | balance | user_id |
 |----|---------|---------|
 | 1  | 50      | 2       |
 
 
-## Подготовка данных для /api/transactions эндпоинта
+## Preparing data for the /api/transactions endpoint
 
-Скрипт собирает JSON для `POST /transactions` и подписывает его секретом
-`APP_TRANSACTION_SECRET` из `.env`.
+The script builds the JSON for `POST /transactions` and signs it with the
+`APP_TRANSACTION_SECRET` secret from `.env`.
 
 ```bash
 poetry run python scripts/prepare_transaction.py
 ```
 
-По умолчанию `user_id=2`, `account_id=2`, `amount=50`, а `transaction_id` —
-новый UUID. Свои значения передаются флагами:
+By default, `user_id=2`, `account_id=2`, `amount=50`, and `transaction_id` is
+a new UUID. Custom values are passed as flags:
 
 ```bash
 poetry run python scripts/prepare_transaction.py --user-id 2 --account-id 1 --amount 50
 ```
 
-### Платёж на чужой счёт
+### Payment to someone else's account
 
-Если счёт `account_id` уже существует и принадлежит другому пользователю,
-платёж отклоняется с ответом `409`. Баланс этого счёта и история платежей
-не меняются. Чужой счёт не считается счётом пользователя из запроса, а создать
-новый счёт с тем же `account_id` нельзя.
+If the account `account_id` already exists and belongs to another user,
+the payment is rejected with a `409` response. That account's balance and payment history
+do not change. Someone else's account is not treated as an account of the user from the request, and a
+new account with the same `account_id` cannot be created.
 
-Так читается пункт задания «проверить, существует ли у пользователя такой счёт —
-если нет, создать».
-
-
-## Тесты
-
-End-to-end тесты ходят в API через ASGI. Им нужна отдельная PostgreSQL, чтобы
-не затронуть данные разработки.
+This is how the assignment item “check whether the user has such an account —
+if not, create one” is read.
 
 
-### Запуск end-to-end тестов
+## Tests
 
-#### 1. Переменные окружения
+End-to-end tests call the API through ASGI. They need a separate PostgreSQL so
+they do not affect development data.
 
-Скопируйте пример тестового окружения. В нём `DB_NAME` указывает на
-отдельную базу `payment_system_test_db`, порт `5433`. Не подменяйте эти
-значения на базу разработки.
+
+### Running end-to-end tests
+
+#### 1. Environment variables
+
+Copy the example test environment. In it, `DB_NAME` points to
+a separate database `payment_system_test_db`, port `5433`. Do not replace these
+values with the development database.
 
 ```bash
 cp .env.test.example .env.test
 ```
 
-#### 2. Каталог данных
+#### 2. Data directory
 
-Контейнер создаёт `.test-data/postgres/` при первом запуске. Если старт
-падает с ошибкой прав или отсутствующего каталога, создайте его вручную:
+The container creates `.test-data/postgres/` on the first start. If startup
+fails with a permissions error or a missing directory, create it manually:
 
 ```bash
 mkdir -p .test-data/postgres
 ```
 
-#### 3. Запустить тестовую базу
+#### 3. Start the test database
 
 ```bash
 docker-compose --env-file .env.test -f compose.test.yaml up -d
 ```
 
-#### 4. Применить миграции
+#### 4. Apply migrations
 
-Отдельная команда не нужна. `pytest` сам выполняет `alembic upgrade head`
-для базы из `.env.test`. Не запускайте `alembic` вручную без этих
-переменных: иначе миграции уйдут в базу разработки из `.env`.
+A separate command is not needed. `pytest` itself runs `alembic upgrade head`
+for the database from `.env.test`. Do not run `alembic` manually without these
+variables: otherwise the migrations will go to the development database from `.env`.
 
-#### 5. Запустить тесты
+#### 5. Run the tests
 
-Зависимости, включая pytest, ставятся той же командой, что и для запуска
-приложения: `poetry install --no-root`.
+Dependencies, including pytest, are installed with the same command as for running
+the application: `poetry install --no-root`.
 
 ```bash
 poetry run pytest
 ```
 
-#### Остановка тестовой базы
+#### Stopping the test database
 
 ```bash
 docker-compose --env-file .env.test -f compose.test.yaml down
 ```
 
 
-### Запуск всех тестов
+### Running all tests
 
-Поднять тестовую базу и прогнать тесты:
+Start the test database and run the tests:
 
 ```bash
 docker-compose --env-file .env.test -f compose.test.yaml up -d
@@ -275,23 +277,23 @@ docker-compose --env-file .env.test -f compose.test.yaml up -d
 poetry run pytest
 ```
 
-Остановить тестовую базу после прогона:
+Stop the test database after the run:
 
 ```bash
 docker-compose --env-file .env.test -f compose.test.yaml down
 ```
 
-### Границы слоёв
+### Layer boundaries
 
-`import-linter` проверяет весь пакет `src`. Каждый модуль входит в один слой:
-`main`, `bootstrap`, `presentation`, `infrastructure`, `application` или
-`domain`. `presentation` и `infrastructure` не импортируют друг друга.
+`import-linter` checks the whole `src` package. Every module belongs to one layer:
+`main`, `bootstrap`, `presentation`, `infrastructure`, `application`, or
+`domain`. `presentation` and `infrastructure` do not import each other.
 
 ```bash
 poetry run lint-imports
 ```
 
-Та же проверка запускается перед коммитом, если установлен хук:
+The same check runs before a commit if the hook is installed:
 
 ```bash
 poetry run pre-commit install
