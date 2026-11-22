@@ -83,13 +83,14 @@ def sync_engine(apply_migrations):
 def reset_database(sync_engine):
     _restore_seed(sync_engine)
     yield
+    _restore_seed(sync_engine)
 
 
 @pytest.fixture
 async def client():
     from httpx import ASGITransport, AsyncClient
 
-    from app.main import app
+    from src.main import app
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://testserver") as http_client:

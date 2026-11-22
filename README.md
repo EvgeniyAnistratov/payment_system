@@ -163,7 +163,7 @@ alembic upgrade head
 ```
 8. Запуск локального сервера
 ```bash
-uvicorn app.main:app
+uvicorn src.main:app
 ```
 
 

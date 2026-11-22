@@ -60,7 +60,7 @@ async def test_missing_user_returns_404(client, admin_headers):
     response = await client.get("/users/99999", headers=admin_headers)
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Not Found"
+    assert response.json()["detail"] == "User 99999 not found"
 
 
 async def test_admin_creates_user_and_duplicate_email_conflicts(client, admin_headers):

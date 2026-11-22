@@ -1,8 +1,8 @@
 """Load the test environment before the application reads settings.
 
-``app.main`` calls ``load_dotenv()`` without overriding existing variables,
-and settings are read at import time. Values from ``.env.test`` are applied
-first so e2e tests never talk to the development database.
+Settings read the process environment first and ``.env`` only for missing
+names. Values from ``.env.test`` are applied first so tests never talk to the
+development database.
 """
 
 import os
